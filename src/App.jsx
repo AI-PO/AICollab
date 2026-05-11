@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import { AppProvider } from './context/AppContext';
 import { useTheme } from './context/useTheme';
+import { OnboardingProvider } from './context/OnboardingContext';
 import Header from './components/layout/Header';
+import OnboardingOverlay from './components/onboarding/OnboardingOverlay';
 import Swap from './pages/Swap';
 import Pools from './pages/Pools';
 import Portfolio from './pages/Portfolio';
@@ -31,17 +33,20 @@ function AppShell() {
   const { isDark, toggleTheme } = useTheme();
 
   return (
-    <div className="min-h-screen bg-bg-base flex flex-col">
-      <Header
-        activePage={activePage}
-        onNavigate={setActivePage}
-        isDark={isDark}
-        toggleTheme={toggleTheme}
-      />
-      <main className="flex-1 flex flex-col">
-        <PageTransition pageId={activePage} />
-      </main>
-    </div>
+    <OnboardingProvider navigateTo={setActivePage}>
+      <div className="min-h-screen bg-bg-base flex flex-col">
+        <Header
+          activePage={activePage}
+          onNavigate={setActivePage}
+          isDark={isDark}
+          toggleTheme={toggleTheme}
+        />
+        <main className="flex-1 flex flex-col">
+          <PageTransition pageId={activePage} />
+        </main>
+        <OnboardingOverlay />
+      </div>
+    </OnboardingProvider>
   );
 }
 

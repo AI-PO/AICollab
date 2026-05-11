@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useApp } from '../context/useApp';
+import { useOnboarding } from '../context/useOnboarding';
 import Modal from '../components/ui/Modal';
 import TokenIcon from '../components/ui/TokenIcon';
 import Badge from '../components/ui/Badge';
@@ -309,10 +310,33 @@ function SuccessModal({ isOpen, onClose, fromToken, toToken, fromAmount, toAmoun
 
 export default function Swap() {
   const { isConnected, connectWallet } = useApp();
+  const { isActive, currentStep } = useOnboarding();
+  const isDemoMode = isActive && currentStep === 2;
+
   const [fromToken, setFromToken] = useState('xrb');
   const [toToken, setToToken] = useState('usdt');
   const [fromAmount, setFromAmount] = useState('');
   const [settlement, setSettlement] = useState('fast');
+
+  // Ghost demo animation when step 3 is active
+  const [demoFrom, setDemoFrom] = useState('');
+  const [demoTo, setDemoTo] = useState('');
+
+  useEffect(() => {
+    if (!isDemoMode) return;
+    const seq = [
+      [400,  () => setDemoFrom('1')],
+      [750,  () => setDemoFrom('10')],
+      [1100, () => setDemoFrom('100')],
+      [1700, () => setDemoTo('82.41')],
+    ];
+    const timers = seq.map(([d, fn]) => setTimeout(fn, d));
+    return () => {
+      timers.forEach(clearTimeout);
+      setDemoFrom('');
+      setDemoTo('');
+    };
+  }, [isDemoMode]);
   const [showConfirm, setShowConfirm] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [isSwapping, setIsSwapping] = useState(false);
@@ -356,14 +380,15 @@ export default function Swap() {
           <p className="text-text-secondary font-dm text-sm">Fast, secure, Bitcoin-native swaps</p>
         </div>
 
-        <div className="bg-bg-surface rounded-3xl border border-border shadow-2xl p-4 space-y-2">
+        <div className="bg-bg-surface rounded-3xl border border-border shadow-2xl p-4 space-y-2" data-onboarding="swap-card">
           {/* From */}
           <TokenInput
             label="You pay"
             tokenId={fromToken}
-            amount={fromAmount}
-            onTokenSelect={setFromToken}
-            onAmountChange={setFromAmount}
+            amount={isDemoMode ? demoFrom : fromAmount}
+            onTokenSelect={isDemoMode ? () => {} : setFromToken}
+            onAmountChange={isDemoMode ? () => {} : setFromAmount}
+            readOnly={isDemoMode}
           />
 
           {/* Swap arrow */}
@@ -375,14 +400,14 @@ export default function Swap() {
           <TokenInput
             label="You receive"
             tokenId={toToken}
-            amount={toAmount ? toAmount.toString() : ''}
-            onTokenSelect={setToToken}
+            amount={isDemoMode ? demoTo : (toAmount ? toAmount.toString() : '')}
+            onTokenSelect={isDemoMode ? () => {} : setToToken}
             onAmountChange={null}
             readOnly
           />
 
           {/* Details row */}
-          {fromAmount && parseFloat(fromAmount) > 0 && (
+          {((fromAmount && parseFloat(fromAmount) > 0) || isDemoMode) && (
             <div className="px-1 py-2 space-y-2 animate-fade-in">
               <div className="flex items-center justify-between text-xs font-dm">
                 <span className="text-text-muted">Price impact</span>
