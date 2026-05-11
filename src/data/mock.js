@@ -292,7 +292,7 @@ export function formatUsd(amount, compact = false) {
 }
 
 // Helper: format token amount
-export function formatAmount(amount, decimals = 6) {
+export function formatAmount(amount) {
   if (amount === 0) return '0';
   if (amount < 0.001) return amount.toFixed(8);
   if (amount < 1) return amount.toFixed(4);

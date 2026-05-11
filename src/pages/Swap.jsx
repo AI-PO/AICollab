@@ -1,5 +1,5 @@
-import { useState, useCallback, useRef } from 'react';
-import { useApp } from '../context/AppContext';
+import { useState } from 'react';
+import { useApp } from '../context/useApp';
 import Modal from '../components/ui/Modal';
 import TokenIcon from '../components/ui/TokenIcon';
 import Badge from '../components/ui/Badge';

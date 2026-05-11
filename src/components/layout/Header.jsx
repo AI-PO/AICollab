@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useApp } from '../../context/AppContext';
+import { useApp } from '../../context/useApp';
 import { formatUsd } from '../../data/mock';
 
 const NAV_ITEMS = [
@@ -26,7 +26,7 @@ function OroSwapLogo() {
   );
 }
 
-function WalletButton({ onConnect }) {
+function WalletButton() {
   const { isConnected, isConnecting, wallet, connectWallet, disconnectWallet } = useApp();
   const [showMenu, setShowMenu] = useState(false);
 

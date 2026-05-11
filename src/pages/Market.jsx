@@ -1,8 +1,10 @@
+import { useId } from 'react';
 import TokenIcon from '../components/ui/TokenIcon';
 import Badge from '../components/ui/Badge';
-import { TOKENS, SPARKLINES, DEX_STATS, POOLS, formatUsd, formatAmount, getToken } from '../data/mock';
+import { TOKENS, SPARKLINES, DEX_STATS, POOLS, formatUsd, getToken } from '../data/mock';
 
 function Sparkline({ data, positive, width = 80, height = 32 }) {
+  const id = useId();
   const min = Math.min(...data);
   const max = Math.max(...data);
   const range = max - min || 1;
@@ -20,7 +22,7 @@ function Sparkline({ data, positive, width = 80, height = 32 }) {
   const areaD = `M ${points[0]} L ${points.join(' L ')} L ${pad + w},${pad + h} L ${pad},${pad + h} Z`;
 
   const color = positive ? '#10B981' : '#EF4444';
-  const gradId = `grad-${Math.random().toString(36).slice(2)}`;
+  const gradId = `grad-${id.replace(/:/g, '')}`;
 
   return (
     <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} fill="none" aria-hidden="true">
@@ -154,7 +156,6 @@ function MostActivePairs() {
 }
 
 export default function Market() {
-  const tradeable = TOKENS.filter(t => !t.comingSoon);
   const allTokens = TOKENS;
 
   return (

@@ -1,4 +1,4 @@
-import { useApp } from '../context/AppContext';
+import { useApp } from '../context/useApp';
 import TokenIcon from '../components/ui/TokenIcon';
 import Badge from '../components/ui/Badge';
 import {

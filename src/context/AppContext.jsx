@@ -1,7 +1,8 @@
-import { createContext, useContext, useState, useCallback } from 'react';
+import { createContext, useState, useCallback } from 'react';
 import { MOCK_WALLET, WALLET_BALANCES } from '../data/mock';
 
-const AppContext = createContext(null);
+// eslint-disable-next-line react-refresh/only-export-components
+export const AppContext = createContext(null);
 
 export function AppProvider({ children }) {
   const [isConnected, setIsConnected] = useState(false);
@@ -41,10 +42,4 @@ export function AppProvider({ children }) {
       {children}
     </AppContext.Provider>
   );
-}
-
-export function useApp() {
-  const ctx = useContext(AppContext);
-  if (!ctx) throw new Error('useApp must be used within AppProvider');
-  return ctx;
 }

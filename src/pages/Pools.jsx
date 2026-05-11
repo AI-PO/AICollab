@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { useApp } from '../context/AppContext';
+import { useApp } from '../context/useApp';
 import Modal from '../components/ui/Modal';
 import { TokenPair } from '../components/ui/TokenIcon';
 import Badge from '../components/ui/Badge';
-import { POOLS, MY_POSITIONS, getToken, formatUsd, formatAmount } from '../data/mock';
+import { POOLS, MY_POSITIONS, getToken, formatUsd } from '../data/mock';
 
 function StatPill({ label, value }) {
   return (
@@ -144,7 +144,6 @@ function AddLiquidityModal({ isOpen, onClose, pool }) {
   const [amountA, setAmountA] = useState('');
   const [amountB, setAmountB] = useState('');
   const [step, setStep] = useState('input');
-  const [feeTier] = useState(30);
 
   if (!pool) return null;
   const tokenA = getToken(pool.tokenA);
