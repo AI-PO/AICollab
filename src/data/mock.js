@@ -331,3 +331,138 @@ export function calculatePriceImpact(fromTokenId, toTokenId, fromAmount) {
   if (usdValue < 50000) return 2.4;
   return 5.1;
 }
+
+// ─── Market Data ───────────────────────────────────────────────────────────────
+
+export const MARKET_PAIRS = [
+  {
+    id: 'xrb-usdt',
+    base: 'XRB',
+    quote: 'USDT',
+    baseIcon: '🔶',
+    price: 0.8241,
+    change24h: 3.47,
+    high24h: 0.8510,
+    low24h: 0.7980,
+    volume24h: 4820000,
+    tvl: 12400000,
+    apr: 18.4,
+    trades24h: 2841,
+  },
+  {
+    id: 'xrb-btc',
+    base: 'XRB',
+    quote: 'BTC',
+    baseIcon: '🔶',
+    price: 0.00001184,
+    change24h: 2.11,
+    high24h: 0.00001220,
+    low24h: 0.00001150,
+    volume24h: 2100000,
+    tvl: 8700000,
+    apr: 14.2,
+    trades24h: 1523,
+  },
+  {
+    id: 'gold-usdt',
+    base: 'GOLD',
+    quote: 'USDT',
+    baseIcon: '🥇',
+    price: 1924.5,
+    change24h: -0.82,
+    high24h: 1945.0,
+    low24h: 1910.0,
+    volume24h: 3350000,
+    tvl: 9800000,
+    apr: 11.6,
+    trades24h: 987,
+  },
+  {
+    id: 'gold-xrb',
+    base: 'GOLD',
+    quote: 'XRB',
+    baseIcon: '🥇',
+    price: 2335.2,
+    change24h: -4.23,
+    high24h: 2440.0,
+    low24h: 2290.0,
+    volume24h: 870000,
+    tvl: 3200000,
+    apr: 22.8,
+    trades24h: 412,
+  },
+  {
+    id: 'xrb-usdc',
+    base: 'XRB',
+    quote: 'USDC',
+    baseIcon: '🔶',
+    price: 0.8238,
+    change24h: 3.44,
+    high24h: 0.8505,
+    low24h: 0.7975,
+    volume24h: 1940000,
+    tvl: 5600000,
+    apr: 15.9,
+    trades24h: 1108,
+  },
+];
+
+// Seeded PRNG (mulberry32) for deterministic price histories
+function mulberry32(seed) {
+  return function () {
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+function genPriceHistory(basePrice, points, volatility, seed) {
+  const rand = mulberry32(seed);
+  const prices = [basePrice];
+  for (let i = 1; i < points; i++) {
+    const prev = prices[i - 1];
+    const drift = (rand() - 0.49) * volatility * prev;
+    prices.push(Math.max(prev + drift, prev * 0.5));
+  }
+  return prices;
+}
+
+const TIMEFRAME_CONFIG = {
+  '1H':  { points: 60,  volatility: 0.003 },
+  '4H':  { points: 96,  volatility: 0.005 },
+  '1D':  { points: 288, volatility: 0.008 },
+  '1W':  { points: 168, volatility: 0.015 },
+  '1M':  { points: 180, volatility: 0.022 },
+};
+
+export const PRICE_HISTORIES = Object.fromEntries(
+  MARKET_PAIRS.map((pair, pi) => [
+    pair.id,
+    Object.fromEntries(
+      Object.entries(TIMEFRAME_CONFIG).map(([tf, { points, volatility }], ti) => [
+        tf,
+        genPriceHistory(pair.price, points, volatility, (pi + 1) * 1000 + ti * 100),
+      ])
+    ),
+  ])
+);
+
+const TRADE_SIDES = ['buy', 'sell'];
+const TRADE_SIZES = [0.05, 0.12, 0.25, 0.5, 1.0, 2.5, 5.0, 10.0, 25.0, 50.0];
+
+function genTrades(pair, count, seed) {
+  const rand = mulberry32(seed);
+  return Array.from({ length: count }, (_, i) => {
+    const side = TRADE_SIDES[rand() > 0.48 ? 0 : 1];
+    const size = TRADE_SIZES[Math.floor(rand() * TRADE_SIZES.length)];
+    const slippage = (rand() - 0.5) * 0.002;
+    const price = pair.price * (1 + slippage);
+    const ago = Math.floor(rand() * 300);
+    return { id: `${pair.id}-t${i}`, side, price, size, value: price * size, secsAgo: ago };
+  }).sort((a, b) => a.secsAgo - b.secsAgo);
+}
+
+export const INITIAL_TRADES = Object.fromEntries(
+  MARKET_PAIRS.map((pair, pi) => [pair.id, genTrades(pair, 40, pi * 999 + 777)])
+);

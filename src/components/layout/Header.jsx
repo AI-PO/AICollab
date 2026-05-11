@@ -106,11 +106,34 @@ function WalletButton() {
   );
 }
 
-export default function Header({ activePage, onNavigate }) {
+function ThemeToggle({ isDark, toggleTheme }) {
+  return (
+    <button
+      onClick={toggleTheme}
+      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      className="w-9 h-9 flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary hover:bg-bg-elevated transition-colors duration-150 cursor-pointer"
+    >
+      {isDark ? (
+        /* Sun — click to go light */
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <circle cx="9" cy="9" r="3.5" stroke="currentColor" strokeWidth="1.4"/>
+          <path d="M9 1v2M9 15v2M1 9h2M15 9h2M3.22 3.22l1.41 1.41M13.36 13.36l1.42 1.42M3.22 14.78l1.41-1.41M13.36 4.64l1.42-1.42" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+        </svg>
+      ) : (
+        /* Moon — click to go dark */
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M15.5 10.5A7 7 0 017.5 2.5a7 7 0 000 13 7 7 0 008-5z" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      )}
+    </button>
+  );
+}
+
+export default function Header({ activePage, onNavigate, isDark, toggleTheme }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border bg-bg-base/90 backdrop-blur-md">
+    <header className="sticky top-0 z-40 w-full border-b border-border bg-bg-base/90 backdrop-blur-md transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <OroSwapLogo />
@@ -132,7 +155,8 @@ export default function Header({ activePage, onNavigate }) {
             ))}
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <ThemeToggle isDark={isDark} toggleTheme={toggleTheme} />
             <WalletButton />
             {/* Mobile menu toggle */}
             <button

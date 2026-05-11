@@ -4,21 +4,24 @@ export default {
     "./index.html",
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        'bg-base': '#0D0D14',
-        'bg-surface': '#13131F',
-        'bg-elevated': '#1A1A2E',
-        'accent': '#F97316',
-        'accent-muted': '#7C3D12',
-        'text-primary': '#F9FAFB',
-        'text-secondary': '#9CA3AF',
-        'text-muted': '#4B5563',
-        'border': '#1F2937',
+        // Theme-adaptive via CSS variables (support opacity modifiers)
+        'bg-base':        'rgb(var(--bg-base) / <alpha-value>)',
+        'bg-surface':     'rgb(var(--bg-surface) / <alpha-value>)',
+        'bg-elevated':    'rgb(var(--bg-elevated) / <alpha-value>)',
+        'accent-muted':   'rgb(var(--accent-muted) / <alpha-value>)',
+        'text-primary':   'rgb(var(--text-primary) / <alpha-value>)',
+        'text-secondary': 'rgb(var(--text-secondary) / <alpha-value>)',
+        'text-muted':     'rgb(var(--text-muted) / <alpha-value>)',
+        'border':         'rgb(var(--border) / <alpha-value>)',
+        // Fixed (same in both themes, need opacity modifiers)
+        'accent':  '#F97316',
         'success': '#10B981',
-        'danger': '#EF4444',
-        'btc': '#F7931A',
+        'danger':  '#EF4444',
+        'btc':     '#F7931A',
       },
       fontFamily: {
         syne: ['Syne', 'sans-serif'],

@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { AppProvider } from './context/AppContext';
+import { useTheme } from './context/useTheme';
 import Header from './components/layout/Header';
 import Swap from './pages/Swap';
 import Pools from './pages/Pools';
@@ -25,17 +26,29 @@ function PageTransition({ pageId }) {
   return <PageComponent key={animKey} />;
 }
 
-export default function App() {
+function AppShell() {
   const [activePage, setActivePage] = useState('swap');
+  const { isDark, toggleTheme } = useTheme();
 
   return (
+    <div className="min-h-screen bg-bg-base flex flex-col">
+      <Header
+        activePage={activePage}
+        onNavigate={setActivePage}
+        isDark={isDark}
+        toggleTheme={toggleTheme}
+      />
+      <main className="flex-1 flex flex-col">
+        <PageTransition pageId={activePage} />
+      </main>
+    </div>
+  );
+}
+
+export default function App() {
+  return (
     <AppProvider>
-      <div className="min-h-screen bg-bg-base flex flex-col">
-        <Header activePage={activePage} onNavigate={setActivePage} />
-        <main className="flex-1 flex flex-col">
-          <PageTransition pageId={activePage} />
-        </main>
-      </div>
+      <AppShell />
     </AppProvider>
   );
 }
