@@ -172,7 +172,7 @@ export default function Header({ activePage, onNavigate, isDark, toggleTheme }) 
     <header className="sticky top-0 z-40 w-full border-b border-border bg-bg-base/90 backdrop-blur-md transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <OroSwapLogo onClick={() => navigate('/landing')} />
+          <OroSwapLogo onClick={() => navigate('/')} />
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-1" role="navigation" aria-label="Main navigation">

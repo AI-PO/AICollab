@@ -75,11 +75,11 @@ export default function Landing() {
     return () => observer.disconnect();
   }, []);
 
-  const goToApp = () => navigate('/');
+  const goToApp = () => navigate('/app');
 
   const watchHowItWorks = () => {
     localStorage.removeItem('oroswap_onboarded');
-    navigate('/');
+    navigate('/app');
   };
 
   return (

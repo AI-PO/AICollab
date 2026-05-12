@@ -56,7 +56,7 @@ export default function App() {
   return (
     <AppProvider>
       <Routes>
-        <Route path="/landing" element={<Landing />} />
+        <Route path="/" element={<Landing />} />
         <Route path="*" element={<AppShell />} />
       </Routes>
     </AppProvider>
