@@ -29,8 +29,9 @@ function OroSwapLogo() {
 
 function WalletButton() {
   const { isConnected, isConnecting, wallet, connectWallet, disconnectWallet } = useApp();
-  const { start } = useOnboarding();
+  const { start, restartOnboarding } = useOnboarding();
   const [showMenu, setShowMenu] = useState(false);
+  const [tourHovered, setTourHovered] = useState(false);
 
   if (isConnecting) {
     return (
@@ -45,7 +46,29 @@ function WalletButton() {
 
   if (isConnected && wallet) {
     return (
-      <div className="relative" data-onboarding="wallet-button">
+      <div className="flex items-center gap-2" data-onboarding="wallet-button">
+        <button
+          onClick={restartOnboarding}
+          onMouseEnter={() => setTourHovered(true)}
+          onMouseLeave={() => setTourHovered(false)}
+          style={{
+            fontFamily: "'DM Mono', monospace",
+            fontSize: '11px',
+            color: tourHovered ? '#F97316' : 'rgb(var(--text-secondary))',
+            background: 'none',
+            border: `1px solid ${tourHovered ? '#F97316' : 'rgb(var(--border))'}`,
+            padding: '6px 12px',
+            cursor: 'pointer',
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            transition: 'all 0.2s',
+            borderRadius: '0',
+            flexShrink: 0,
+          }}
+        >
+          ↺ Tour
+        </button>
+      <div className="relative">
         <button
           onClick={() => setShowMenu(v => !v)}
           className="flex items-center gap-2 px-3 py-2 rounded-xl bg-bg-elevated border border-border hover:border-accent/40 transition-all duration-200 cursor-pointer group"
@@ -101,6 +124,7 @@ function WalletButton() {
             </button>
           </div>
         )}
+      </div>
       </div>
     );
   }

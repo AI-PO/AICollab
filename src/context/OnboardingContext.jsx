@@ -48,10 +48,17 @@ export function OnboardingProvider({ children, navigateTo }) {
     if (goToSwap && navigateTo) navigateTo('swap');
   }, [navigateTo]);
 
+  const restartOnboarding = useCallback(() => {
+    localStorage.removeItem('oroswap_onboarded');
+    setCurrentStep(0);
+    setShowSkipConfirm(false);
+    setIsActive(true);
+  }, []);
+
   return (
     <OnboardingContext.Provider value={{
       isActive, currentStep, showSkipConfirm,
-      start, next, back, skip, cancelSkip, confirmSkip, complete,
+      start, next, back, skip, cancelSkip, confirmSkip, complete, restartOnboarding,
     }}>
       {children}
     </OnboardingContext.Provider>

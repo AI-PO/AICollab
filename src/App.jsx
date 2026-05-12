@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import { AppProvider } from './context/AppContext';
 import { useTheme } from './context/useTheme';
 import { OnboardingProvider } from './context/OnboardingContext';
@@ -8,6 +9,7 @@ import Swap from './pages/Swap';
 import Pools from './pages/Pools';
 import Portfolio from './pages/Portfolio';
 import Market from './pages/Market';
+import Landing from './pages/Landing';
 
 const PAGES = { swap: Swap, pools: Pools, portfolio: Portfolio, market: Market };
 
@@ -53,7 +55,10 @@ function AppShell() {
 export default function App() {
   return (
     <AppProvider>
-      <AppShell />
+      <Routes>
+        <Route path="/landing" element={<Landing />} />
+        <Route path="*" element={<AppShell />} />
+      </Routes>
     </AppProvider>
   );
 }
