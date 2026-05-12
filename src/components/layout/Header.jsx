@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../context/useApp';
 import { useOnboarding } from '../../context/useOnboarding';
 import { formatUsd } from '../../data/mock';
@@ -10,9 +11,9 @@ const NAV_ITEMS = [
   { id: 'market', label: 'Market' },
 ];
 
-function OroSwapLogo() {
+function OroSwapLogo({ onClick }) {
   return (
-    <div className="flex items-center gap-2" data-onboarding="header-logo">
+    <button onClick={onClick} className="flex items-center gap-2 bg-transparent border-0 p-0 cursor-pointer" data-onboarding="header-logo">
       <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #F97316, #EAB308)' }}>
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
           <path d="M9 2L14.196 5V11L9 14L3.804 11V5L9 2Z" fill="white" fillOpacity="0.9"/>
@@ -23,15 +24,14 @@ function OroSwapLogo() {
         <span className="text-accent">Oro</span>
         <span className="text-text-primary">Swap</span>
       </span>
-    </div>
+    </button>
   );
 }
 
 function WalletButton() {
   const { isConnected, isConnecting, wallet, connectWallet, disconnectWallet } = useApp();
-  const { start, restartOnboarding } = useOnboarding();
+  const { start } = useOnboarding();
   const [showMenu, setShowMenu] = useState(false);
-  const [tourHovered, setTourHovered] = useState(false);
 
   if (isConnecting) {
     return (
@@ -47,27 +47,6 @@ function WalletButton() {
   if (isConnected && wallet) {
     return (
       <div className="flex items-center gap-2" data-onboarding="wallet-button">
-        <button
-          onClick={restartOnboarding}
-          onMouseEnter={() => setTourHovered(true)}
-          onMouseLeave={() => setTourHovered(false)}
-          style={{
-            fontFamily: "'DM Mono', monospace",
-            fontSize: '11px',
-            color: tourHovered ? '#F97316' : 'rgb(var(--text-secondary))',
-            background: 'none',
-            border: `1px solid ${tourHovered ? '#F97316' : 'rgb(var(--border))'}`,
-            padding: '6px 12px',
-            cursor: 'pointer',
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            transition: 'all 0.2s',
-            borderRadius: '0',
-            flexShrink: 0,
-          }}
-        >
-          ↺ Tour
-        </button>
       <div className="relative">
         <button
           onClick={() => setShowMenu(v => !v)}
@@ -167,14 +146,33 @@ function ThemeToggle({ isDark, toggleTheme }) {
   );
 }
 
+function TourButton() {
+  const { restartOnboarding } = useOnboarding();
+  return (
+    <button
+      onClick={restartOnboarding}
+      aria-label="Restart tour"
+      title="Restart tour"
+      className="w-9 h-9 flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary hover:bg-bg-elevated transition-colors duration-150 cursor-pointer"
+    >
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.3"/>
+        <path d="M6.5 6.5a1.5 1.5 0 1 1 1.5 1.5V9.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+        <circle cx="8" cy="11.5" r="0.75" fill="currentColor"/>
+      </svg>
+    </button>
+  );
+}
+
 export default function Header({ activePage, onNavigate, isDark, toggleTheme }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-bg-base/90 backdrop-blur-md transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <OroSwapLogo />
+          <OroSwapLogo onClick={() => navigate('/landing')} />
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-1" role="navigation" aria-label="Main navigation">
@@ -195,6 +193,7 @@ export default function Header({ activePage, onNavigate, isDark, toggleTheme }) 
           </nav>
 
           <div className="flex items-center gap-2">
+            <TourButton />
             <ThemeToggle isDark={isDark} toggleTheme={toggleTheme} />
             <WalletButton />
             {/* Mobile menu toggle */}
