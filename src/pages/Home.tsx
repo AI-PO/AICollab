@@ -1,62 +1,33 @@
-import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import NodeBackground from '../components/NodeBackground'
+import FadeIn from '../components/FadeIn'
 
-function FadeSection({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
-  const ref = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const obs = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; obs.disconnect() } },
-      { threshold: 0.08 }
-    )
-    obs.observe(el)
-    return () => obs.disconnect()
-  }, [])
-  return (
-    <div
-      ref={ref}
-      className={className}
-      style={{ opacity: 0, transform: 'translateY(28px)', transition: `opacity 0.7s ease ${delay}s, transform 0.7s ease ${delay}s` }}
-    >
-      {children}
-    </div>
-  )
-}
-
-const services3 = [
-  { title: 'AI Agents', desc: 'Autonomous agents built for your workflows — sales, ops, support, research.' },
-  { title: 'Business Integration', desc: 'Connect AI into your existing stack. CRM, ERP, Slack, email. No rip-and-replace.' },
-  { title: 'Doc & Idea Flow', desc: 'Automate how information moves through your organisation. Intake to archive.' },
-]
-
-const serviceCards = [
-  { num: '01', title: 'AI Agents', outcome: 'Replace repetitive decisions with agents that act on your behalf, 24/7.' },
-  { num: '02', title: 'Document Flow', outcome: 'Stop managing documents. Let the documents manage themselves.' },
-  { num: '03', title: 'Business Integration', outcome: 'Plug AI into what you already use. No new tools required.' },
-  { num: '04', title: 'AI Strategy & Audit', outcome: 'Know exactly where AI makes the biggest difference before you spend a cent.' },
+const services = [
+  { icon: '🤖', iconClass: 'icon-indigo', title: 'AI Agents', desc: 'Autonomous agents built around your workflows — sales, ops, support, research. They act, not just respond.' },
+  { icon: '🔗', iconClass: 'icon-coral', title: 'Business Integration', desc: 'Connect AI into your existing stack. CRM, ERP, Slack, email. No rip-and-replace. No disruption.' },
+  { icon: '📄', iconClass: 'icon-mint', title: 'Doc & Idea Flow', desc: 'Automate how information moves through your organisation. Intake to archive, without manual handoffs.' },
 ]
 
 const stats = [
-  { value: '$50M+', label: 'in value processed across client deployments' },
-  { value: '80K+', label: 'monthly active users on platforms we\'ve built' },
-  { value: '0', label: 'security incidents across all deployments' },
-  { value: '6+', label: 'years shipping production systems' },
+  { val: '$50M+', label: 'in value processed across client deployments' },
+  { val: '80K+', label: 'monthly active users on platforms we\'ve built' },
+  { val: '0', label: 'security incidents across all deployments' },
+  { val: '6+', label: 'years shipping production systems' },
 ]
 
 const cases = [
   {
     tag: 'AI Developer Tooling',
     title: 'Henry Coder',
-    result: '87% reduction in development time. 1,000+ developers monthly.',
-    detail: 'Built an AI that writes code — and 1,000 developers adopted it immediately.',
+    result: '87% reduction in dev time. 1,000+ developers monthly.',
+    detail: 'Built an AI that writes smart contracts — 1,000 developers adopted it immediately.',
+    metrics: [{ val: '87%', lbl: 'faster' }, { val: '1K+', lbl: 'monthly users' }],
   },
   {
     tag: 'Privacy Infrastructure',
-    title: 'ZAMA Auction Platform',
+    title: 'ZAMA Auction',
     result: '$121.3M total value processed. 11,000+ unique users.',
-    detail: 'Most-used app on Ethereum during peak days. Built for privacy, scaled for volume.',
+    detail: 'Most-used app on Ethereum during peak days. Privacy at scale.',
+    metrics: [{ val: '$121M', lbl: 'value shielded' }, { val: '11K+', lbl: 'bidders' }],
   },
 ]
 
@@ -65,142 +36,151 @@ export default function Home() {
     <>
       {/* HERO */}
       <section className="hero">
-        <NodeBackground />
-        <div className="hero-glow" />
+        <div className="orb-field">
+          <div className="orb orb-1" />
+          <div className="orb orb-2" />
+          <div className="orb orb-3" />
+        </div>
+
+        {/* Floating stat cards */}
+        <div className="hero-cards">
+          <div className="hero-float-card fc-1">
+            <div className="fc-label">Deployed agents</div>
+            <div className="fc-value">247</div>
+          </div>
+          <div className="hero-float-card fc-2">
+            <div className="fc-label">Avg time saved</div>
+            <div className="fc-value-sm"><span className="fc-dot"/>14 hrs/week per team</div>
+          </div>
+          <div className="hero-float-card fc-3">
+            <div className="fc-label">Client satisfaction</div>
+            <div className="fc-value">98%</div>
+          </div>
+        </div>
+
         <div className="hero-content">
-          <div className="hero-badge" style={{ opacity: 0, animation: 'fadeIn 0.8s ease 0.2s forwards' }}>
+          <div className="hero-eyebrow fade-in d1">
+            <span className="hero-eyebrow-dot" />
             Intelligence, deployed.
           </div>
-          <h1 className="hero-h1" style={{ opacity: 0, animation: 'fadeIn 0.8s ease 0.4s forwards' }}>
-            We build AI<br /><span>that works.</span>
+          <h1 className="hero-h1 fade-in d2">
+            We build AI
+            <span className="hero-h1-accent">that works.</span>
           </h1>
-          <p className="hero-sub" style={{ opacity: 0, animation: 'fadeIn 0.8s ease 0.6s forwards' }}>
-            Custom AI agents, automation, and document flows built for how your business actually runs. Not demos. Not prototypes. Deployed and running.
+          <p className="hero-sub fade-in d3">
+            Custom agents, automation, and document flows built for how your business actually runs. Not demos. Not experiments. Deployed and running.
           </p>
-          <div className="hero-btns" style={{ opacity: 0, animation: 'fadeIn 0.8s ease 0.8s forwards' }}>
+          <div className="hero-btns fade-in d4">
             <Link to="/work" className="btn-ghost">See our work</Link>
             <Link to="/contact" className="btn-primary">Start a project →</Link>
           </div>
         </div>
+
         <div className="hero-scroll">
-          <span>Scroll</span>
-          <div className="scroll-line" />
+          <span className="scroll-text">Scroll</span>
+          <div className="scroll-track" />
         </div>
       </section>
-
-      <style>{`
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-      `}</style>
 
       {/* WHAT WE DO */}
-      <section className="section-light">
+      <section className="section section-white">
         <div className="container">
-          <div className="two-col">
-            <FadeSection>
-              <p className="section-label" style={{ color: 'rgba(10,10,15,0.35)' }}>What we do</p>
-              <h2 className="section-h2-dark">
+          <div className="split-2" style={{ marginBottom: 0 }}>
+            <FadeIn>
+              <span className="eyebrow">What we do</span>
+              <h2 className="h2">
                 Your team is brilliant.<br />
-                <span>They shouldn't<br />be doing this.</span>
+                <em>They shouldn't be doing this.</em>
               </h2>
-            </FadeSection>
-            <FadeSection delay={0.1}>
-              <p className="body-dark" style={{ paddingTop: 8 }}>
-                AI Collab builds the agents and automation that handle repetitive work — so your people focus on what actually needs them. We deploy, integrate, and maintain everything. You get outcomes.
+            </FadeIn>
+            <FadeIn delay={0.1}>
+              <p className="body-lg" style={{ paddingTop: 48 }}>
+                AI Collab builds the agents and automation that handle repetitive work — so your people focus on what actually needs them. We deploy, integrate, and maintain everything.
               </p>
-              <Link to="/services" className="link-cta">Explore all services →</Link>
-            </FadeSection>
+              <Link to="/services" className="link-inline">Explore all services <span>→</span></Link>
+            </FadeIn>
           </div>
 
-          <div className="three-grid">
-            {services3.map((s, i) => (
-              <FadeSection key={s.title} delay={i * 0.1}>
-                <div className="card-light">
-                  <div className="card-icon"><div className="card-icon-dot" /></div>
-                  <h3 className="card-h3">{s.title}</h3>
-                  <p className="card-p">{s.desc}</p>
+          <div className="three-cards">
+            {services.map((s, i) => (
+              <FadeIn key={s.title} delay={i * 0.1}>
+                <div className="glass-card" style={{ height: '100%' }}>
+                  <div className={`service-icon ${s.iconClass}`}>{s.icon}</div>
+                  <h3 className="h3">{s.title}</h3>
+                  <p className="body">{s.desc}</p>
                 </div>
-              </FadeSection>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* SERVICES CARDS */}
-      <section className="section-dark">
-        <div className="container">
-          <FadeSection>
-            <p className="section-label">Services</p>
-            <h2 className="section-h2-light" style={{ maxWidth: 560, marginBottom: 48 }}>
-              Four ways to deploy intelligence
-            </h2>
-          </FadeSection>
-          <div className="two-grid">
-            {serviceCards.map((c, i) => (
-              <FadeSection key={c.num} delay={i * 0.08}>
-                <div className="service-card">
-                  <div className="service-num">{c.num}</div>
-                  <h3 className="service-h3">{c.title}</h3>
-                  <p className="service-p">{c.outcome}</p>
-                  <Link to="/services" className="link-cta-light">Learn more →</Link>
-                </div>
-              </FadeSection>
+              </FadeIn>
             ))}
           </div>
         </div>
       </section>
 
       {/* STATS */}
-      <section className="section-surface">
+      <section className="section section-warm">
         <div className="container">
-          <div className="stats-grid">
+          <FadeIn>
+            <span className="eyebrow">By the numbers</span>
+            <h2 className="h2" style={{ marginBottom: 48 }}>Results you can <em>measure.</em></h2>
+          </FadeIn>
+          <div className="stats-row">
             {stats.map((s, i) => (
-              <FadeSection key={s.value} delay={i * 0.08}>
-                <div className="stat-value">{s.value}</div>
-                <div className="stat-label">{s.label}</div>
-              </FadeSection>
+              <FadeIn key={s.val} delay={i * 0.08}>
+                <div className="stat-card">
+                  <div className="stat-number">{s.val}</div>
+                  <div className="stat-label">{s.label}</div>
+                </div>
+              </FadeIn>
             ))}
           </div>
         </div>
       </section>
 
       {/* CASE STUDIES */}
-      <section className="section-dark">
+      <section className="section section-white">
         <div className="container">
-          <FadeSection>
-            <div className="section-header-row">
+          <FadeIn>
+            <div className="section-header">
               <div>
-                <p className="section-label">Selected work</p>
-                <h2 className="section-h2-light">Production systems.<br />Real results.</h2>
+                <span className="eyebrow">Selected work</span>
+                <h2 className="h2">Production systems.<br /><em>Real results.</em></h2>
               </div>
-              <Link to="/work" className="link-cta-light">View all work →</Link>
+              <Link to="/work" className="link-inline">View all work <span>→</span></Link>
             </div>
-          </FadeSection>
-          <div className="cases-grid">
+          </FadeIn>
+          <div className="cases-2">
             {cases.map((c, i) => (
-              <FadeSection key={c.title} delay={i * 0.1}>
+              <FadeIn key={c.title} delay={i * 0.12}>
                 <div className="case-card">
+                  <div className="case-card-accent" />
                   <span className="case-tag">{c.tag}</span>
                   <h3 className="case-h3">{c.title}</h3>
                   <p className="case-result">{c.result}</p>
                   <p className="case-detail">{c.detail}</p>
+                  <div className="case-metrics">
+                    {c.metrics.map(m => (
+                      <div key={m.lbl}>
+                        <span className="case-metric-val">{m.val}</span>
+                        <span className="case-metric-lbl">{m.lbl}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </FadeSection>
+              </FadeIn>
             ))}
           </div>
         </div>
       </section>
 
-      {/* FINAL CTA */}
-      <section className="cta-section">
+      {/* CTA */}
+      <section className="section section-light">
         <div className="container">
-          <FadeSection>
-            <p className="section-label" style={{ textAlign: 'center' }}>Ready to start</p>
-            <h2 className="cta-h2">Ready to put AI<br /><span>to work?</span></h2>
-            <p className="cta-sub">Tell us what you're trying to solve. We'll tell you exactly how AI can solve it.</p>
-            <Link to="/contact" className="btn-primary" style={{ display: 'inline-block' }}>
-              Start a project →
-            </Link>
-          </FadeSection>
+          <FadeIn>
+            <div className="cta-block">
+              <h2 className="cta-h2">Ready to put AI to work?</h2>
+              <p className="cta-sub">Tell us what you're trying to solve. We'll tell you exactly how AI can solve it.</p>
+              <Link to="/contact" className="btn-white">Start a project →</Link>
+            </div>
+          </FadeIn>
         </div>
       </section>
     </>
