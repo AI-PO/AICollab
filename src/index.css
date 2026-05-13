@@ -1,95 +1,111 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* ─── Light mode (default) ────────────────────────────────────────────────── */
-/* Colors stored as space-separated RGB channels so Tailwind opacity          */
-/* modifiers work: rgb(var(--bg-base) / 0.9)                                  */
 :root {
-  --bg-base:        249 250 251;   /* #F9FAFB */
-  --bg-surface:     255 255 255;   /* #FFFFFF */
-  --bg-elevated:    243 244 246;   /* #F3F4F6 */
-  --accent-muted:   255 247 237;   /* #FFF7ED orange-50 */
-  --text-primary:   17  24  39;    /* #111827 */
-  --text-secondary: 55  65  81;    /* #374151 */
-  --text-muted:     107 114 128;   /* #6B7280 */
-  --border:         229 231 235;   /* #E5E7EB */
-  --skeleton-mid:   #E5E7EB;
-  color-scheme: light;
+  --text: #6b6375;
+  --text-h: #08060d;
+  --bg: #fff;
+  --border: #e5e4e7;
+  --code-bg: #f4f3ec;
+  --accent: #aa3bff;
+  --accent-bg: rgba(170, 59, 255, 0.1);
+  --accent-border: rgba(170, 59, 255, 0.5);
+  --social-bg: rgba(244, 243, 236, 0.5);
+  --shadow:
+    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.18px;
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
 }
 
-/* ─── Dark mode ───────────────────────────────────────────────────────────── */
-.dark {
-  --bg-base:        13  13  20;    /* #0D0D14 */
-  --bg-surface:     19  19  31;    /* #13131F */
-  --bg-elevated:    26  26  46;    /* #1A1A2E */
-  --accent-muted:   124 61  18;    /* #7C3D12 */
-  --text-primary:   249 250 251;   /* #F9FAFB */
-  --text-secondary: 156 163 175;   /* #9CA3AF */
-  --text-muted:     75  85  99;    /* #4B5563 */
-  --border:         31  41  55;    /* #1F2937 */
-  --skeleton-mid:   #252540;
-  color-scheme: dark;
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #9ca3af;
+    --text-h: #f3f4f6;
+    --bg: #16171d;
+    --border: #2e303a;
+    --code-bg: #1f2028;
+    --accent: #c084fc;
+    --accent-bg: rgba(192, 132, 252, 0.15);
+    --accent-border: rgba(192, 132, 252, 0.5);
+    --social-bg: rgba(47, 48, 58, 0.5);
+    --shadow:
+      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+  }
+
+  #social .button-icon {
+    filter: invert(1) brightness(2);
+  }
 }
 
-/* ─── Base styles ─────────────────────────────────────────────────────────── */
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+#root {
+  width: 1126px;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  border-inline: 1px solid var(--border);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
-  background-color: rgb(var(--bg-base));
-  color: rgb(var(--text-primary));
-  font-family: 'DM Sans', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-size: 16px;
-  line-height: 1.6;
-  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-#root { min-height: 100vh; display: flex; flex-direction: column; }
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Syne', sans-serif;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 500;
+  color: var(--text-h);
 }
 
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-input[type="number"] { -moz-appearance: textfield; }
-
-/* ─── Skeleton shimmer ───────────────────────────────────────────────────── */
-.skeleton {
-  background: linear-gradient(
-    90deg,
-    rgb(var(--bg-elevated)) 25%,
-    var(--skeleton-mid) 50%,
-    rgb(var(--bg-elevated)) 75%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite linear;
-  border-radius: 6px;
-}
-
-@keyframes shimmer {
-  0%   { background-position: -200% 0; }
-  100% { background-position:  200% 0; }
-}
-
-/* ─── Scrollbar ──────────────────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 4px; height: 4px; }
-::-webkit-scrollbar-track { background: rgb(var(--bg-surface)); }
-::-webkit-scrollbar-thumb { background: rgb(var(--border)); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: rgb(var(--text-muted)); }
-
-/* ─── Focus ring ─────────────────────────────────────────────────────────── */
-*:focus-visible { outline: 2px solid #F97316; outline-offset: 2px; border-radius: 4px; }
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
+h1 {
+  font-size: 56px;
+  letter-spacing: -1.68px;
+  margin: 32px 0;
+  @media (max-width: 1024px) {
+    font-size: 36px;
+    margin: 20px 0;
   }
+}
+h2 {
+  font-size: 24px;
+  line-height: 118%;
+  letter-spacing: -0.24px;
+  margin: 0 0 8px;
+  @media (max-width: 1024px) {
+    font-size: 20px;
+  }
+}
+p {
+  margin: 0;
+}
+
+code,
+.counter {
+  font-family: var(--mono);
+  display: inline-flex;
+  border-radius: 4px;
+  color: var(--text-h);
+}
+
+code {
+  font-size: 15px;
+  line-height: 135%;
+  padding: 4px 8px;
+  background: var(--code-bg);
 }
